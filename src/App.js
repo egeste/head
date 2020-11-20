@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import get from 'lodash/get'
 
 import React, { Fragment, useState, useEffect } from 'react'
 
@@ -18,17 +19,36 @@ import Button from 'react-bootstrap/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-export default () => {
-  const [ eyes, setEyes ] = useState({ x: 90, y: 90 })
-  const [ neck, setNeck ] = useState({ x: 90, y: 90 })
+import {
+  SERVO_POSITION
+} from './server/socket/events'
 
+export const App = () => {
+  const [ servos, setServos ] = useState({})
   const [ socket, setSocket ] = useState(undefined)
 
   useEffect(() => {
     if (socket) return
+
     const newSocket = new WebSocket(`ws://${window.location.host}/socket`)
-    newSocket.onopen = () => setSocket(newSocket)
-    newSocket.onclose = () => setSocket(undefined)
+
+    newSocket.addEventListener('open', () => setSocket(newSocket))
+    newSocket.addEventListener('close', () => setSocket(undefined))
+
+    newSocket.addEventListener('message', ({ data }) => {
+      let message
+      try { message = JSON.parse(data) }
+      catch (e) { return console.error(e.message) }
+
+      switch(message.event) {
+        case SERVO_POSITION: {
+          return setServos({ ...servos, [message.name]: message.position })
+        }
+        default: {
+          console.warn('Unhandled message', message)
+        }
+      }
+    })
   }, [socket])
 
   return (
@@ -67,17 +87,15 @@ export default () => {
               as={Slider}
               axis="xy"
 
-              x={eyes.x}
+              x={get(servos, 'eyesXServo')}
               xmin={0}
               xmax={180}
               xstep={1}
 
-              y={eyes.y}
+              y={get(servos, 'eyesYServo')}
               ymin={0}
               ymax={180}
               ystep={1}
-
-              onChange={setEyes}
             />
           </Col>
 
@@ -93,12 +111,10 @@ export default () => {
 
               axis="x"
 
-              x={neck.x}
+              x={get('servos, jawYServo')}
               xmin={0}
               xmax={180}
               xstep={1}
-
-              onChange={setNeck}
             />
           </Col>
         </Row>
@@ -115,3 +131,5 @@ export default () => {
     </Fragment>
   )
 }
+
+export default App
