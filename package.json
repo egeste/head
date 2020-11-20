@@ -3,14 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/node": "^7.12.6",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-proposal-decorators": "^7.12.1",
     "@babel/plugin-proposal-export-default-from": "^7.12.1",
-    "@babel/plugin-proposal-export-namespace-from": "^7.12.1",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.5",
     "@babel/register": "^7.12.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
@@ -28,6 +24,7 @@
     "i2c-bus": "^5.2.1",
     "lodash": "^4.17.20",
     "node-sass": "^4.14.1",
+    "nodemon": "^2.0.6",
     "pca9685": "^4.0.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
@@ -42,7 +39,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "babel-node": "babel-node --presets @babel/preset-env",
+    "hack": "nodemon --exec npm run babel-node -- ./test.js"
   },
   "eslintConfig": {
     "extends": [

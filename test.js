@@ -1,4 +1,4 @@
-import driverPromise from './driver'
+import driverPromise from './src/server/pca9685/driver'
 import { scaleLinear } from 'd3-scale'
 
 const positionToPulse = scaleLinear()
