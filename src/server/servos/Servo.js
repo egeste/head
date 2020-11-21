@@ -20,6 +20,8 @@ export default class Servo extends EventEmitter {
     dutyCycle=0.25,
     pulseRange=[600, 2400]
   }) {
+    super()
+
     this._blocked = true
     this._channel = channel
     this._position = position
