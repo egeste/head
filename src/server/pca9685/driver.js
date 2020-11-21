@@ -3,7 +3,7 @@ import { Pca9685Driver } from 'pca9685'
 
 const options = {
   i2c: I2cBus.openSync(1),
-  debug: false
+  debug: true
 }
 
 export default new Promise((resolve, reject) => {
