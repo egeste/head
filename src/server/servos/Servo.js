@@ -8,7 +8,7 @@ import driverPromise from './driver'
 export const MIN_POSITION = 0
 export const MAX_POSITION = 1
 export const sanitizePosition = (input = 0.5) => {
-  return Math.max(Math.min(position, MAX_POSITION), MIN_POSITION)
+  return Math.max(Math.min(input, MAX_POSITION), MIN_POSITION)
 }
 
 export default class Servo extends EventEmitter {
@@ -41,8 +41,8 @@ export default class Servo extends EventEmitter {
     return this._position
   }
 
-  setPosition = (position = 0.5) => {
-    this._position = sanitizePosition(position)
+  setPosition = input => {
+    this._position = sanitizePosition(input)
     return this.save()
   }
 
