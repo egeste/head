@@ -1,33 +1,13 @@
-import driverPromise from './src/server/pca9685/driver'
-import { scaleLinear } from 'd3-scale'
+import {
+  JAW_SERVO,
+  EYES_X_SERVO,
+  EYES_Y_SERVO,
+  NECK_X_SERVO,
+  NECK_Y_SERVO
+} from './src/server/servos'
 
-driverPromise.then(driver => {
-
-  driver.setDutyCycle(0, 0.25)
-  driver.setPulseLength(0, (
-    scaleLinear()
-      .domain([ 0, 1 ])
-      .range([ 556, 2420 ])
-  )(0.5))
-
-  driver.setDutyCycle(1, 0.25)
-  driver.setPulseLength(1, (
-    scaleLinear()
-      .domain([ 0, 1 ])
-      .range([ 400, 1600 ])
-  )(0.5))
-
-//   driver.setDutyCycle(0, 0.25)
-//   driver.setPulseLength(0, (
-//     scaleLinear()
-//       .domain([ 0, 180 ])
-//       .range([ 556, 2420 ])
-//   )(90))
-//
-//   driver.setDutyCycle(0, 0.25)
-//   driver.setPulseLength(0, (
-//     scaleLinear()
-//       .domain([ 0, 180 ])
-//       .range([ 556, 2420 ])
-//   )(90))
-})
+JAW_SERVO.setPosition(0.5)
+EYES_X_SERVO.setPosition(0.5)
+EYES_Y_SERVO.setPosition(0.5)
+NECK_X_SERVO.setPosition(0.5)
+NECK_Y_SERVO.setPosition(0.5)

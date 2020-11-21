@@ -1,18 +1,29 @@
+import debounce from 'lodash/debounce'
+
 import EventEmitter from 'events'
 import { scaleLinear } from 'd3-scale'
 
 import driverPromise from './driver'
 
-export const MIN_POSITION = 0
-export const MAX_POSITION = 1
-
-const sanitizePosition = (input = 0.5) => {
-  return Math.max(Math.min(position, MAX_POSITION), MIN_POSITION)
-}
-
 export default class Servo extends EventEmitter {
 
-  constructor(channel, position=0.5, pulseRange=[0, 400], dutyCycle=0.25) {
+  static const MIN_POSITION = 0
+  static const MAX_POSITION = 1
+  static sanitizePosition = (input = 0.5) => {
+    return Math.max(
+      Math.min(
+        position,
+        Servo.MAX_POSITION
+      ),
+      Servo.MIN_POSITION
+    )
+  }
+
+  blocked = true
+
+  constructor(channel, position=0.5, pulseRange=[600, 2400], dutyCycle=0.25) {
+    this.save = debounce(this.save, 10)
+
     this._channel = channel
     this._position = position
 
@@ -21,6 +32,7 @@ export default class Servo extends EventEmitter {
       .range(pulseRange)
 
     driverPromise.then(driver => {
+      blocked = false
       driver.setDutyCycle(channel, dutyCycle)
     })
   }
@@ -30,16 +42,19 @@ export default class Servo extends EventEmitter {
   }
 
   setPosition = (position = 0.5) => {
-    const sanitizedPosition = Math.max(Math.min(position, MAX_POSITION), MIN_POSITION)
-    this._position = position
+    this._position = Servo.sanitizePosition(position)
     return this.save()
   }
 
   save = () => {
+    if (blocked) return Promise.reject('blocked')
+
+    blocked = true
     return driverPromise.then(driver => {
+      blocked = false
       const pulseLength = this._scalePosition(this._position)
-      return driver.setPulseLength(this._channel, pulseLength)
-    })
+      driver.setPulseLength(this._channel, pulseLength)
+    }).catch(() => blocked = false)
   }
 
   // readPulseWidth = () => {
