@@ -1,9 +1,31 @@
 import Servo from './Servo'
 
-export const NECK_X_SERVO = new Servo(0, 0.5, [556, 2420])
-export const NECK_Y_SERVO = new Servo(1, 0.5, [556, 2420])
+// Neck control
+export const NECK_X_SERVO = new Servo({
+  pin: 0,
+  position: 0.5,
+  pwmRange: [556, 2420]
+})
 
-export const JAW_SERVO = new Servo(4, 0.5)
+// export const NECK_Y_SERVO = new Servo({
+//   pin: 1,
+//   position: 0.5,
+//   pwmRange: [556, 2420]
+// })
 
-export const EYES_X_SERVO = new Servo(14, 0.5)
-export const EYES_Y_SERVO = new Servo(15, 0.5)
+// Jaw control
+export const JAW_SERVO = new Servo({
+  pin: 4,
+  position: 0.5
+})
+
+// Eye control
+export const EYES_X_SERVO = new Servo({
+  pin: 14,
+  position: 0.5
+})
+
+export const EYES_Y_SERVO = new Servo({
+  pin: 15,
+  position: 0.5
+})

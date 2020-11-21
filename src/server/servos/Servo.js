@@ -13,7 +13,13 @@ export const sanitizePosition = (input = 0.5) => {
 
 export default class Servo extends EventEmitter {
 
-  constructor(channel, position=0.5, pulseRange=[600, 2400], dutyCycle=0.25) {
+  constructor({
+    channel,
+    position=0.5,
+    frequency=50,
+    dutyCycle=0.25,
+    pulseRange=[600, 2400]
+  }) {
     this._blocked = true
     this._channel = channel
     this._position = position
@@ -29,16 +35,16 @@ export default class Servo extends EventEmitter {
     })
   }
 
-  getPosition() {
+  getPosition = () => {
     return this._position
   }
 
-  setPosition(position = 0.5) {
+  setPosition = (position = 0.5) => {
     this._position = sanitizePosition(position)
     return this.save()
   }
 
-  save() {
+  save = () => {
     if (this._blocked) return Promise.reject('blocked')
 
     this._blocked = true
