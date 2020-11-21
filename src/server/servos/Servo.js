@@ -29,16 +29,16 @@ export default class Servo extends EventEmitter {
     })
   }
 
-  getPosition = () => {
+  getPosition() {
     return this._position
   }
 
-  setPosition = (position = 0.5) => {
+  setPosition(position = 0.5) {
     this._position = sanitizePosition(position)
     return this.save()
   }
 
-  save = () => {
+  save() {
     if (this._blocked) return Promise.reject('blocked')
 
     this._blocked = true
