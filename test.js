@@ -16,7 +16,7 @@ driverPromise.then(driver => {
   driver.setPulseLength(1, (
     scaleLinear()
       .domain([ 0, 1 ])
-      .range([ 40, 400 ])
+      .range([ 10, 400 ])
   )(0.5))
 
 //   driver.setDutyCycle(0, 0.25)
