@@ -3,13 +3,22 @@ import debounce from 'lodash/debounce'
 import EventEmitter from 'events'
 import { scaleLinear } from 'd3-scale'
 
-import driverPromise from './driver'
-
 export const MIN_POSITION = 0
 export const MAX_POSITION = 1
 export const sanitizePosition = (input = 0.5) => {
   return Math.max(Math.min(input, MAX_POSITION), MIN_POSITION)
 }
+
+const driverPromise = (() => {
+  try { return require('./driver').default }
+  catch (e) {
+    console.warn('Could not load o2c driver. Using mocked driver.')
+    return Promise.resolve({
+      setDutyCycle: (() => {}),
+      setPulseLength: ((a, b, c, cb) => cb())
+    })
+  }
+})()
 
 export default class Servo extends EventEmitter {
 
@@ -22,49 +31,50 @@ export default class Servo extends EventEmitter {
   }) {
     super()
 
-    this._blocked = true
-    this._channel = channel
-    this._position = position
+    this.blocked = true
+    this.channel = channel
+    this.position = position
 
-    // this.save = debounce(this.save, 10)
-    this._scalePosition = scaleLinear()
+    this.positionToPulse = scaleLinear()
       .domain([ MIN_POSITION, MAX_POSITION ])
       .range(pulseRange)
 
     driverPromise.then(driver => {
-      this._blocked = false
       driver.setDutyCycle(channel, dutyCycle)
+      this.blocked = false
     })
   }
 
   getPosition = () => {
-    return this._position
+    return this.position
   }
 
   setPosition = input => {
-    this._position = sanitizePosition(input)
-    return this.save()
+    this.position = sanitizePosition(input)
+    return this.setPulseLength(this.positionToPulse(this.position))
   }
 
-  save = () => {
-    if (this._blocked) return Promise.reject('blocked')
+  setBlocked = blocked => {
+    this.blocked = blocked
+    return this.emit('blocked', this.blocked, this)
+  }
 
-    this._blocked = true
+  setPulseLength = pulseLength => {
+    if (this.blocked) return
+
+    this.setBlocked(true)
+
     return driverPromise.then(driver => {
-      this._blocked = false
-      const pulseLength = this._scalePosition(this._position)
-      driver.setPulseLength(this._channel, pulseLength)
-    }).catch(() => this._blocked = false)
+      return new Promise((resolve, reject) => {
+        driver.setPulseLength(this.channel, pulseLength, 0, error => {
+          this.setBlocked(false)
+
+          if (error) return reject(error)
+
+          this.emit('position', this.position, this)
+          return resolve(driver)
+        })
+      })
+    })
   }
-
-  // readPulseWidth = () => {
-  //   const pulseWidth = this.pca9685.getServoPulseWidth()
-  //   this._position = pulseWidthToPosition(pulseWidth)
-  //   this.fire('read', this)
-  //   return pulseWidth
-  // }
-
-  // readPosition = () => {
-  //   return pulseWidthToPosition(this.readPulseWidth())
-  // }
 }

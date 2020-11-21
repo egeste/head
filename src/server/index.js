@@ -1,5 +1,6 @@
-import express from 'express'
+require('dotenv').config()
 
+import express from 'express'
 import injectRoutes from './routes'
 
 const app = express()
@@ -10,4 +11,3 @@ injectRoutes(app)
 app.listen(port, () => {
   console.log(`App running on port ${port}`)
 })
-
