@@ -5,34 +5,26 @@ import { scaleLinear } from 'd3-scale'
 
 import driverPromise from './driver'
 
+export const MIN_POSITION = 0
+export const MAX_POSITION = 1
+export const sanitizePosition = (input = 0.5) => {
+  return Math.max(Math.min(position, MAX_POSITION), MIN_POSITION)
+}
+
 export default class Servo extends EventEmitter {
 
-  static MIN_POSITION = 0
-  static MAX_POSITION = 1
-  static sanitizePosition = (input = 0.5) => {
-    return Math.max(
-      Math.min(
-        position,
-        Servo.MAX_POSITION
-      ),
-      Servo.MIN_POSITION
-    )
-  }
-
-  blocked = true
-
   constructor(channel, position=0.5, pulseRange=[600, 2400], dutyCycle=0.25) {
-    this.save = debounce(this.save, 10)
-
+    this._blocked = true
     this._channel = channel
     this._position = position
 
+    // this.save = debounce(this.save, 10)
     this._scalePosition = scaleLinear()
       .domain([ MIN_POSITION, MAX_POSITION ])
       .range(pulseRange)
 
     driverPromise.then(driver => {
-      blocked = false
+      this._blocked = false
       driver.setDutyCycle(channel, dutyCycle)
     })
   }
@@ -42,19 +34,19 @@ export default class Servo extends EventEmitter {
   }
 
   setPosition = (position = 0.5) => {
-    this._position = Servo.sanitizePosition(position)
+    this._position = sanitizePosition(position)
     return this.save()
   }
 
   save = () => {
-    if (blocked) return Promise.reject('blocked')
+    if (this._blocked) return Promise.reject('blocked')
 
-    blocked = true
+    this._blocked = true
     return driverPromise.then(driver => {
-      blocked = false
+      this._blocked = false
       const pulseLength = this._scalePosition(this._position)
       driver.setPulseLength(this._channel, pulseLength)
-    }).catch(() => blocked = false)
+    }).catch(() => this._blocked = false)
   }
 
   // readPulseWidth = () => {
