@@ -7,8 +7,8 @@ import driverPromise from './driver'
 
 export default class Servo extends EventEmitter {
 
-  static const MIN_POSITION = 0
-  static const MAX_POSITION = 1
+  static MIN_POSITION = 0
+  static MAX_POSITION = 1
   static sanitizePosition = (input = 0.5) => {
     return Math.max(
       Math.min(
