@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-// import { scaleLinear } from 'd3-scale'
+import { scaleLinear } from 'd3-scale'
 
 import driverPromise from './driver'
 
@@ -11,6 +11,10 @@ export default class Servo extends EventEmitter {
   constructor(channel, position=90, pulseRange=[0, 180], dutyCycle=0.25) {
     this._channel = channel
     this._position = position
+
+    this._scalePosition = scaleLinear()
+      .domain([ 0, 180 ])
+      .range(pulseRange)
 
     driverPromise.then(driver => {
       driver.setDutyCycle(channel, dutyCycle)
