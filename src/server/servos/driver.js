@@ -1,10 +1,9 @@
 export default new Promise((resolve, reject) => {
   try {
-    const I2cBus = require('i2c-bus').default
     const { Pca9685Driver } = require('pca9685')
 
     const pca9685 = new Pca9685Driver({
-      i2c: I2cBus.openSync(1),
+      i2c: require('i2c-bus').openSync(1),
       debug: true
     }, error => {
       if (error) {
