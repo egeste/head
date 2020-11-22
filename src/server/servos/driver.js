@@ -10,11 +10,11 @@ export default new Promise((resolve, reject) => {
   try {
     const pca9685 = new Pca9685Driver(options, error => {
       if (error) {
-        console.error('Error initializing Pca9685Driver')
+        console.error('Error initializing pca9685 driver')
         return process.exit(1)
       }
 
-      console.log('Initialized Pca9685Driver')
+      console.log('Initialized pca9685 driver')
       return resolve(pca9685)
     })
   } catch (e) {

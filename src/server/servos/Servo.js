@@ -3,27 +3,13 @@ import debounce from 'lodash/debounce'
 import EventEmitter from 'events'
 import { scaleLinear } from 'd3-scale'
 
+import driverPromise from './driver'
+
 export const MIN_POSITION = 0
 export const MAX_POSITION = 1
 export const sanitizePosition = (input = 0.5) => {
   return Math.max(Math.min(input, MAX_POSITION), MIN_POSITION)
 }
-
-const driverPromise = (() => {
-  try { return require('./driver').default }
-  catch (e) {
-    console.warn('Could not load o2c driver. Using mocked driver.')
-    return Promise.resolve({
-      setDutyCycle: (() => {
-        console.log('setDutyCycle')
-      }),
-      setPulseWidth: ((a, b, c, cb) => {
-        console.log('setPulseWidth')
-        cb()
-      })
-    })
-  }
-})()
 
 export default class Servo extends EventEmitter {
 

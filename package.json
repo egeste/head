@@ -43,6 +43,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "server": "node index",
     "babel-node": "babel-node --presets @babel/preset-env --plugins @babel/plugin-proposal-class-properties",
     "hack": "nodemon --exec npm run babel-node -- ./test.js"
   },
