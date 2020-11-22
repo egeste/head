@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form'
 import Slider from 'react-input-slider'
 
 import {
-  SERVO_POSITION
+  SERVO_PULSE_WIDTH
 } from '../../server/socket/events'
 
 import AppContext from '../../lib/context'
@@ -53,7 +53,7 @@ export const DirectControls = () => {
                       xstep={1}
 
                       onChange={debounce(({ x: pulse }) => {
-                        socket.send(JSON.stringify({ event: SERVO_POSITION, name, pulse }))
+                        socket.send(JSON.stringify({ event: SERVO_PULSE_WIDTH, name, pulse }))
                       }, 100)}
                     />
                   </Form.Group>
