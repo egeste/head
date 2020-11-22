@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import debounce from 'lodash/debounce'
 
 import React, { Fragment, useContext, useCallback } from 'react'
 
@@ -27,11 +28,11 @@ import AppContext from '../../lib/context'
 export const DashboardControls = () => {
   const { socket, servos } = useContext(AppContext)
 
-  const onChangeEyesXY = useCallback(({ x, y }) => {
+  const onChangeEyesXY = debounce(useCallback(({ x, y }) => {
     if (!socket) return
     socket.send(JSON.stringify({ event: SERVO_POSITION, name: EYES_X_SERVO_NAME, position: x }))
     socket.send(JSON.stringify({ event: SERVO_POSITION, name: EYES_Y_SERVO_NAME, position: y }))
-  }, [socket])
+  }, [socket]), 100)
 
   return (
     <Fragment>

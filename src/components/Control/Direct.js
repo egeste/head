@@ -1,3 +1,5 @@
+import debounce from 'lodash/debounce'
+
 import React, { useContext, useMemo } from 'react'
 
 import Row from 'react-bootstrap/Row'
@@ -49,9 +51,9 @@ export const DirectControls = () => {
                       xmax={3000}
                       xstep={1}
 
-                      onChange={({ x: pulse }) => {
+                      onChange={debounce(({ x: pulse }) => {
                         socket.send(JSON.stringify({ event: SERVO_POSITION, name, pulse }))
-                      }}
+                      }, 100)}
                     />
                   </Form.Group>
                 </Col>
