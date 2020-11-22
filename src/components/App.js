@@ -53,7 +53,10 @@ export const App = () => {
         }
 
         case SERVO_STATUS: {
-          return setServos(servos => ({  ...servos, [payload.name]: payload.status }))
+          return setServos(servos => ({
+            ...servos,
+            [payload.name]: payload.status
+          }))
         }
 
         default: {

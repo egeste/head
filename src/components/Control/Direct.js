@@ -1,5 +1,3 @@
-import debounce from 'lodash/debounce'
-
 import React, { useContext, useMemo } from 'react'
 
 import Row from 'react-bootstrap/Row'

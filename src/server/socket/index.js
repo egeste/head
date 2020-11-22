@@ -58,12 +58,14 @@ socketServer.on('connection', socket => {
           if (!servos[message.name]) throw 'servo not found'
           servos[message.name].setPosition(message.position)
             .then(() => sendStatusMessage(message.name, servos[message.name]))
+          break
         }
 
         case SERVO_PULSE_WIDTH: {
           if (!servos[message.name]) throw 'servo not found'
           servos[message.name].setPulseWidth(message.pulse)
             .then(() => sendStatusMessage(message.name, servos[message.name]))
+          break
         }
 
         default: {
