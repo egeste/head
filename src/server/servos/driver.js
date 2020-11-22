@@ -1,14 +1,12 @@
-import I2cBus from 'i2c-bus'
-import { Pca9685Driver } from 'pca9685'
-
-const options = {
-  i2c: I2cBus.openSync(1),
-  debug: true
-}
-
 export default new Promise((resolve, reject) => {
   try {
-    const pca9685 = new Pca9685Driver(options, error => {
+    const I2cBus = require('i2c-bus').default
+    const { Pca9685Driver } = require('pca9685')
+
+    const pca9685 = new Pca9685Driver({
+      i2c: I2cBus.openSync(1),
+      debug: true
+    }, error => {
       if (error) {
         console.error('Error initializing pca9685 driver')
         return process.exit(1)
@@ -19,6 +17,26 @@ export default new Promise((resolve, reject) => {
     })
   } catch (e) {
     console.error(e)
-    process.exit(1)
+    return resolve({
+      channelOn: ((channel, cb) => {
+        cb(console.info('channelOn', channel))
+      }),
+
+      channelOff: ((channel, cb) => {
+        cb(console.info('channelOff', channel))
+      }),
+
+      setDutyCycle: ((channel, percentage, onStep, cb) => {
+        cb(console.info('setDutyCycle', channel, percentage, onStep))
+      }),
+
+      setPulseRange: ((channel, from, to, cb) => {
+        cb(console.info('setPulseRange', channel, from, to))
+      }),
+
+      setPulseLength: ((channel, pulse, onStep, cb) => {
+        console.info('setPulseLength', channel, pulse, onStep)
+      })
+    })
   }
 })

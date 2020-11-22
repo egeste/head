@@ -16,7 +16,7 @@ export const socketPort = 8667
 
 export const socketProxy = createProxyMiddleware('/socket', {
   ws: true,
-  target: `ws://localhost:${socketPort}/`,
+  target: process.env.WEBSOCKET_URL,
   changeOrigin: true
 })
 
@@ -48,7 +48,7 @@ socketServer.on('connection', socket => {
     })
   }
 
-  socket.on('message', async input => {
+  socket.on('message', input => {
     try {
       const message = JSON.parse(input)
 
@@ -56,14 +56,14 @@ socketServer.on('connection', socket => {
 
         case SERVO_POSITION: {
           if (!servos[message.name]) throw 'servo not found'
-          await servos[message.name].setPosition(message.position)
-          sendStatusMessage(message.name, servos[message.name])
+          servos[message.name].setPosition(message.position)
+            .then(() => sendStatusMessage(message.name, servos[message.name]))
         }
 
         case SERVO_PULSE_WIDTH: {
           if (!servos[message.name]) throw 'servo not found'
-          await servos[message.name].setPulseWidth(message.pulse)
-          sendStatusMessage(message.name, servos[message.name])
+          servos[message.name].setPulseWidth(message.pulse)
+            .then(() => sendStatusMessage(message.name, servos[message.name]))
         }
 
         default: {
