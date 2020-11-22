@@ -30,7 +30,6 @@ export default class Servo extends EventEmitter {
   constructor({
     channel,
     position=0.5,
-    frequency=50,
     dutyCycle=0.25,
     pulseRange=[600, 2400]
   }) {

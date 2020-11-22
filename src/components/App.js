@@ -73,13 +73,17 @@ export const App = () => {
 
           <Nav className="ml-auto mr-3 mr-md-2">
             <Nav.Item>
-              <small>
+              <small className={classNames({
+                'animate__flash': !socket,
+                'animate__animated': !socket,
+                'animate__infinite': !socket
+              })}>
                 <FontAwesomeIcon
                   icon={faCircle}
                   title={socket ? 'Connected' : 'Connecting...'}
                   className={classNames({
-                    'text-warning': !socket,
-                    'text-success': socket
+                    'text-success': socket,
+                    'text-warning': !socket
                   })}
                 />
               </small>
