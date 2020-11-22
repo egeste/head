@@ -32,7 +32,6 @@ export default class Servo extends EventEmitter {
     driverPromise.then(driver => {
       driver.setDutyCycle(channel, dutyCycle)
       this.blocked = false
-      this.setPosition(this.position)
     })
   }
 
