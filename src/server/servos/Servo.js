@@ -14,8 +14,13 @@ const driverPromise = (() => {
   catch (e) {
     console.warn('Could not load o2c driver. Using mocked driver.')
     return Promise.resolve({
-      setDutyCycle: (() => {}),
-      setPulseLength: ((a, b, c, cb) => cb())
+      setDutyCycle: (() => {
+        console.log('setDutyCycle')
+      }),
+      setPulseWidth: ((a, b, c, cb) => {
+        console.log('setPulseWidth')
+        cb()
+      })
     })
   }
 })()
@@ -35,13 +40,14 @@ export default class Servo extends EventEmitter {
     this.channel = channel
     this.position = position
 
-    this.positionToPulse = scaleLinear()
+    this.positionToPulseWidth = scaleLinear()
       .domain([ MIN_POSITION, MAX_POSITION ])
       .range(pulseRange)
 
     driverPromise.then(driver => {
       driver.setDutyCycle(channel, dutyCycle)
       this.blocked = false
+      this.setPosition(this.position)
     })
   }
 
@@ -49,24 +55,24 @@ export default class Servo extends EventEmitter {
     return this.position
   }
 
-  setPosition = input => {
-    this.position = sanitizePosition(input)
-    return this.setPulseLength(this.positionToPulse(this.position))
+  setPosition = (position = this.position) => {
+    this.position = sanitizePosition(position)
+    return this.setPulseWidth(this.positionToPulseWidth(this.position))
   }
 
-  setBlocked = blocked => {
+  setBlocked = (blocked = this.blocked) => {
     this.blocked = blocked
     return this.emit('blocked', this.blocked, this)
   }
 
-  setPulseLength = pulseLength => {
+  setPulseWidth = (pulseLength = this.positionToPulseWidth(this.position)) => {
     if (this.blocked) return
 
     this.setBlocked(true)
 
     return driverPromise.then(driver => {
       return new Promise((resolve, reject) => {
-        driver.setPulseLength(this.channel, pulseLength, 0, error => {
+        driver.setPulseWidth(this.channel, pulseLength, 0, error => {
           this.setBlocked(false)
 
           if (error) return reject(error)

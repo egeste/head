@@ -5,7 +5,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 import {
   ERROR,
   CONNECTED,
-  SERVO_POSITION
+  SERVO_POSITION,
+  SERVO_PULSE_WIDTH
 } from './events'
 
 import servos from '../servos'
@@ -42,6 +43,11 @@ socketServer.on('connection', socket => {
         case SERVO_POSITION: {
           if (!servos[message.name]) throw 'Servo not found'
           return await servos[message.name].setPosition(message.position)
+        }
+
+        case SERVO_PULSE_WIDTH: {
+          if (!servos[message.name]) throw 'Servo not found'
+          return await servos[message.name].setPulseWidth(message.pulse)
         }
 
         default: throw 'Unhandled event'
