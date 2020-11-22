@@ -18,9 +18,11 @@ export const EYES_Y_SERVO_CHANNEL = 15
 export const EYES_Y_SERVO_POSITION = 0.5
 export const EYES_Y_SERVO_PWM_RANGE = [600, 2400]
 
-export default [
+export const SERVO_NAMES = [
   JAW_SERVO_NAME,
   NECK_X_SERVO_NAME,
   EYES_X_SERVO_NAME,
   EYES_Y_SERVO_NAME
 ]
+
+export default SERVO_NAMES
