@@ -21,7 +21,7 @@ import {
   // NECK_X_SERVO_NAME,
   EYES_X_SERVO_NAME,
   EYES_X_SERVO_POSITION,
-  EYES_Y_SERVO_NAME
+  EYES_Y_SERVO_NAME,
   EYES_Y_SERVO_POSITION
 } from '../../server/servos/constants'
 
