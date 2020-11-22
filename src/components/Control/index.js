@@ -1,4 +1,4 @@
-// import get from 'lodash/get'
+import get from 'lodash/get'
 import debounce from 'lodash/debounce'
 
 import React, { Fragment, useContext, useCallback } from 'react'
@@ -20,7 +20,9 @@ import {
   // JAW_SERVO_NAME,
   // NECK_X_SERVO_NAME,
   EYES_X_SERVO_NAME,
+  EYES_X_SERVO_POSITION,
   EYES_Y_SERVO_NAME
+  EYES_Y_SERVO_POSITION
 } from '../../server/servos/constants'
 
 import AppContext from '../../lib/context'
@@ -48,12 +50,12 @@ export const DashboardControls = () => {
             as={Slider}
             axis="xy"
 
-            x={servos[EYES_X_SERVO_NAME].position}
+            x={get(servos, 'EYES_X_SERVO_NAME.position', EYES_X_SERVO_POSITION)}
             xmin={0}
             xmax={1}
             xstep={0.01}
 
-            y={servos[EYES_Y_SERVO_NAME].position}
+            y={get(servos, 'EYES_Y_SERVO_NAME.position', EYES_Y_SERVO_POSITION)}
             ymin={0}
             ymax={1}
             ystep={0.01}
