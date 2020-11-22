@@ -1,4 +1,4 @@
-import get from 'lodash/get'
+// import get from 'lodash/get'
 import debounce from 'lodash/debounce'
 
 import React, { Fragment, useContext, useCallback } from 'react'
@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 
 import Form from 'react-bootstrap/Form'
 import Image from 'react-bootstrap/Image'
-import Button from 'react-bootstrap/Button'
+// import Button from 'react-bootstrap/Button'
 
 import Slider from 'react-input-slider'
 

@@ -22,8 +22,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import {
   CONNECTED,
-  SERVO_STATUS,
-  SERVO_POSITION
+  SERVO_STATUS
 } from '../server/socket/events'
 
 import DashboardControls from './Control'
