@@ -42,6 +42,12 @@ socketServer.on('connection', socket => {
     })
   }
 
+  const sendAllStatusMessages = () => {
+    return Object.entries(servos).map(([ name, servo ]) => {
+      return sendStatusMessage(name, servo)
+    })
+  }
+
   socket.on('message', async input => {
     try {
       const message = JSON.parse(input)
@@ -51,29 +57,32 @@ socketServer.on('connection', socket => {
         case SERVO_POSITION: {
           if (!servos[message.name]) throw 'servo not found'
           await servos[message.name].setPosition(message.position)
+          sendStatusMessage(message.name, servos[message.name])
         }
 
         case SERVO_PULSE_WIDTH: {
           if (!servos[message.name]) throw 'servo not found'
           await servos[message.name].setPulseWidth(message.pulse)
+          sendStatusMessage(message.name, servos[message.name])
         }
 
-        default: throw 'unknown event'
+        default: {
+          // sendAllStatusMessages()
+          throw 'unknown event'
+        }
       }
 
     } catch (error) {
       sendMessage({ event: ERROR, error, input })
     }
-
-    sendStatusMessage()
   })
-
-  sendMessage({ event: CONNECTED })
 
   Object.entries(servos).map(([ name, servo ]) => {
     const sendStatus = () => sendStatusMessage(name, servo)
-    servo.on('position', sendStatus)
-    socket.on('close', () => servo.off('position', sendStatus))
-    sendStatus()
+    servo.on('pulse', sendStatus)
+    socket.on('close', () => servo.off('pulse', sendStatus))
   })
+
+  sendMessage({ event: CONNECTED })
+  sendAllStatusMessages()
 })

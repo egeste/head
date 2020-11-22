@@ -47,7 +47,7 @@ export default class Servo extends EventEmitter {
 
   setBlocked = (blocked = this.blocked) => {
     this.blocked = blocked
-    return this.emit('blocked', this.blocked, this)
+    return this.emit('blocked', this)
   }
 
   setPosition = (position = this.position) => {
@@ -67,7 +67,7 @@ export default class Servo extends EventEmitter {
 
           if (error) return reject(error)
 
-          this.emit('position', this.position, this)
+          this.emit('pulse', this)
           return resolve(driver)
         })
       })
