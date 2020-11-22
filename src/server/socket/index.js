@@ -35,25 +35,23 @@ socketServer.on('connection', socket => {
   }
 
   socket.on('message', async input => {
-    try {
-      const message = JSON.parse(input)
+    let message
+    try { message = JSON.parse(input) }
+    catch (error) { return sendMessage({ event: ERROR, error, input }) }
 
-      switch(message.event) {
+    switch(message.event) {
 
-        case SERVO_POSITION: {
-          if (!servos[message.name]) throw 'Servo not found'
-          return await servos[message.name].setPosition(message.position)
-        }
-
-        case SERVO_PULSE_WIDTH: {
-          if (!servos[message.name]) throw 'Servo not found'
-          return await servos[message.name].setPulseWidth(message.pulse)
-        }
-
-        default: throw 'Unhandled event'
+      case SERVO_POSITION: {
+        if (!servos[message.name]) throw 'servo not found'
+        return await servos[message.name].setPosition(message.position)
       }
-    } catch (error) {
-      sendMessage({ event: ERROR, error, input })
+
+      case SERVO_PULSE_WIDTH: {
+        if (!servos[message.name]) throw 'servo not found'
+        return await servos[message.name].setPulseWidth(message.pulse)
+      }
+
+      default: sendMessage({ event: ERROR, error: 'unknown event', input })
     }
   })
 
