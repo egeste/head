@@ -22,6 +22,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import {
   CONNECTED,
+  SERVO_STATUS,
   SERVO_POSITION
 } from '../server/socket/events'
 
@@ -52,8 +53,8 @@ export const App = () => {
           return console.info('Received connection message.')
         }
 
-        case SERVO_POSITION: {
-          return setServos(servos => ({  ...servos, [payload.name]: payload.position }))
+        case SERVO_STATUS: {
+          return setServos(servos => ({  ...servos, [payload.name]: payload.status }))
         }
 
         default: {
@@ -67,8 +68,8 @@ export const App = () => {
     <AppContext.Provider value={{ socket, servos }}>
       <Router>
         <Navbar bg="dark" variant="dark" expand="md">
-          <Navbar.Brand href="/">
-            <span>Project Mímir</span>
+          <Navbar.Brand as={Link} to="/">
+            Project Mímir
           </Navbar.Brand>
 
           <Nav className="ml-auto mr-3 mr-md-2">

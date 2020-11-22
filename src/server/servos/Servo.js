@@ -7,6 +7,7 @@ import driverPromise from './driver'
 
 export const MIN_POSITION = 0
 export const MAX_POSITION = 1
+
 export const sanitizePosition = (input = 0.5) => {
   return Math.max(Math.min(input, MAX_POSITION), MIN_POSITION)
 }
@@ -32,6 +33,7 @@ export default class Servo extends EventEmitter {
     driverPromise.then(driver => {
       driver.setDutyCycle(channel, dutyCycle)
       this.blocked = false
+      this.setPosition()
     })
   }
 
@@ -39,14 +41,18 @@ export default class Servo extends EventEmitter {
     return this.position
   }
 
-  setPosition = (position = this.position) => {
-    this.position = sanitizePosition(position)
-    return this.setPulseWidth(this.positionToPulseWidth(this.position))
+  getPulseWidth = () => {
+    return this.positionToPulseWidth(this.position)
   }
 
   setBlocked = (blocked = this.blocked) => {
     this.blocked = blocked
     return this.emit('blocked', this.blocked, this)
+  }
+
+  setPosition = (position = this.position) => {
+    this.position = sanitizePosition(position)
+    return this.setPulseWidth(this.positionToPulseWidth(this.position))
   }
 
   setPulseWidth = (pulseLength = this.positionToPulseWidth(this.position)) => {
@@ -67,4 +73,5 @@ export default class Servo extends EventEmitter {
       })
     })
   }
+
 }

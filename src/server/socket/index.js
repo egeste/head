@@ -5,6 +5,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 import {
   ERROR,
   CONNECTED,
+  SERVO_STATUS,
   SERVO_POSITION,
   SERVO_PULSE_WIDTH
 } from './events'
@@ -30,37 +31,49 @@ socketServer.on('connection', socket => {
     return socket.send(JSON.stringify(message))
   }
 
-  const sendPositionMessage = (name, servo) => {
-    return sendMessage({ event: SERVO_POSITION, name, position: servo.getPosition() })
+  const sendStatusMessage = (servoName, servo) => {
+    return sendMessage({
+      name: servoName,
+      event: SERVO_STATUS,
+      status: {
+        pulse: servo.getPulseWidth(),
+        position: servo.getPosition()
+      }
+    })
   }
 
   socket.on('message', async input => {
-    let message
-    try { message = JSON.parse(input) }
-    catch (error) { return sendMessage({ event: ERROR, error, input }) }
+    try {
+      const message = JSON.parse(input)
 
-    switch(message.event) {
+      switch(message.event) {
 
-      case SERVO_POSITION: {
-        if (!servos[message.name]) throw 'servo not found'
-        return await servos[message.name].setPosition(message.position)
+        case SERVO_POSITION: {
+          if (!servos[message.name]) throw 'servo not found'
+          await servos[message.name].setPosition(message.position)
+        }
+
+        case SERVO_PULSE_WIDTH: {
+          if (!servos[message.name]) throw 'servo not found'
+          await servos[message.name].setPulseWidth(message.pulse)
+        }
+
+        default: throw 'unknown event'
       }
 
-      case SERVO_PULSE_WIDTH: {
-        if (!servos[message.name]) throw 'servo not found'
-        return await servos[message.name].setPulseWidth(message.pulse)
-      }
-
-      default: sendMessage({ event: ERROR, error: 'unknown event', input })
+    } catch (error) {
+      sendMessage({ event: ERROR, error, input })
     }
+
+    sendStatusMessage()
   })
 
   sendMessage({ event: CONNECTED })
 
   Object.entries(servos).map(([ name, servo ]) => {
-    const sendPosition = () => sendPositionMessage(name, servo)
-    servo.on('position', sendPosition)
-    socket.on('close', () => servo.off('position', sendPosition))
-    sendPosition()
+    const sendStatus = () => sendStatusMessage(name, servo)
+    servo.on('position', sendStatus)
+    socket.on('close', () => servo.off('position', sendStatus))
+    sendStatus()
   })
 })

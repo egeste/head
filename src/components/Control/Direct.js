@@ -32,7 +32,7 @@ export const DirectControls = () => {
 
           <Card.Body as={Row}>
             {useMemo(() => {
-              return Object.entries(servos).map(([ name, position ]) => (
+              return Object.entries(servos).map(([ name, status ]) => (
                 <Col key={`pwm-control-${name}`}
                   as={Form.Group}
                   xs={Math.floor(servos.length / 12)}
@@ -40,13 +40,14 @@ export const DirectControls = () => {
                 >
                   <Form.Group>
                     <Form.Label>
-                      {name} : {position}
+                      {name} : {status.pulse} ({status.position})
                     </Form.Label>
 
                     <Form.Control
                       as={Slider}
                       axis="x"
 
+                      x={status.pulse}
                       xmin={0}
                       xmax={3000}
                       xstep={1}

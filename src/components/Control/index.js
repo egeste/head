@@ -48,12 +48,12 @@ export const DashboardControls = () => {
             as={Slider}
             axis="xy"
 
-            x={servos[EYES_X_SERVO_NAME]}
+            x={servos[EYES_X_SERVO_NAME].position}
             xmin={0}
             xmax={1}
             xstep={0.01}
 
-            y={servos[EYES_Y_SERVO_NAME]}
+            y={servos[EYES_Y_SERVO_NAME].position}
             ymin={0}
             ymax={1}
             ystep={0.01}
@@ -67,6 +67,7 @@ export const DashboardControls = () => {
         </Col>
       </Row>
 
+      {/*
       <Row>
         <Col className="py-5" xs={{ span: 6, offset: 3 }}>
           <Slider
@@ -89,6 +90,8 @@ export const DashboardControls = () => {
           </Button>
         </Col>
       </Row>
+      */}
+
     </Fragment>
   )
 }
