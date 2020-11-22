@@ -34,7 +34,7 @@ export const DashboardControls = () => {
     if (!socket) return
     socket.send(JSON.stringify({ event: SERVO_POSITION, name: EYES_X_SERVO_NAME, position: x }))
     socket.send(JSON.stringify({ event: SERVO_POSITION, name: EYES_Y_SERVO_NAME, position: y }))
-  }, [socket]), 100)
+  }, [socket]), 10)
 
   return (
     <Fragment>

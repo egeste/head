@@ -54,7 +54,7 @@ export const DirectControls = () => {
 
                       onChange={debounce(({ x: pulse }) => {
                         socket.send(JSON.stringify({ event: SERVO_PULSE_WIDTH, name, pulse }))
-                      }, 100)}
+                      }, 10)}
                     />
                   </Form.Group>
                 </Col>
