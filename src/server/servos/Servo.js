@@ -63,7 +63,7 @@ export default class Servo extends EventEmitter {
 
     return driverPromise.then(driver => {
       return new Promise((resolve, reject) => {
-        driver.setPulseLength(this.channel, pulseLength, 0, error => {
+        driver.setPulseLength(this.channel, Math.round(pulseLength), 0, error => {
           this.setBlocked(false)
 
           if (error) return reject(error)
