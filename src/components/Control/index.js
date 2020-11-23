@@ -54,6 +54,7 @@ export const DashboardControls = () => {
             xmin={0}
             xmax={1}
             xstep={0.01}
+            xreverse
 
             y={get(servos, 'EYES_Y_SERVO_NAME.position', EYES_Y_SERVO_POSITION)}
             ymin={0}

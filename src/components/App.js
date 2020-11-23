@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import {
+  ERROR,
   CONNECTED,
   SERVO_STATUS
 } from '../server/socket/events'
@@ -53,10 +54,11 @@ export const App = () => {
         }
 
         case SERVO_STATUS: {
-          return setServos(servos => ({
-            ...servos,
-            [payload.name]: payload.status
-          }))
+          return setServos(servos => ({ ...servos, [payload.name]: payload.status }))
+        }
+
+        case ERROR: {
+          return console.warn('Received error', payload)
         }
 
         default: {
