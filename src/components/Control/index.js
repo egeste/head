@@ -17,10 +17,15 @@ import {
 } from '../../server/socket/events'
 
 import {
-  // JAW_SERVO_NAME,
-  // NECK_X_SERVO_NAME,
+  JAW_SERVO_NAME,
+  JAW_SERVO_POSITION,
+
+  NECK_X_SERVO_NAME,
+  NECK_X_SERVO_POSITION,
+
   EYES_X_SERVO_NAME,
   EYES_X_SERVO_POSITION,
+
   EYES_Y_SERVO_NAME,
   EYES_Y_SERVO_POSITION
 } from '../../server/servos/constants'
@@ -36,14 +41,65 @@ export const DashboardControls = () => {
     socket.send(JSON.stringify({ event: SERVO_POSITION, name: EYES_Y_SERVO_NAME, position: y }))
   }, [socket]), 10)
 
+  const onChangeNeckXY = debounce(useCallback(({ x, y }) => {
+    if (!socket) return
+    socket.send(JSON.stringify({ event: SERVO_POSITION, name: NECK_X_SERVO_NAME, position: x }))
+  }, [socket]), 10)
+
+  const onChangeJaw = debounce(useCallback(({ y }) => {
+    if (!socket) return
+    socket.send(JSON.stringify({ event: SERVO_POSITION, name: JAW_SERVO_NAME, position: y }))
+  }, [socket]), 10)
+
   return (
     <Fragment>
       <Row>
-        <Col xs={5}>
-          <Image fluid className="w-100" src="/cameras/left_eye" />
+        <Col xs={6}>
+          <Image fluid className="w-100" src="/cameras?action=stream_0" />
         </Col>
+        <Col xs={6}>
+          <Image fluid className="w-100" src="/cameras?action=stream_0" />
+        </Col>
+      </Row>
 
-        <Col as={Form.Group} xs={2} className="mb-0">
+      <Row className="my-4">
+        <Col xs={5} style={{ minHeight: '30vh' }}>
+          <Form.Control
+            className="w-100 h-100"
+
+            as={Slider}
+            axis="xy"
+
+            x={get(servos, 'NECK_X_SERVO_NAME.position', NECK_X_SERVO_POSITION)}
+            xmin={0}
+            xmax={1}
+            xstep={0.01}
+            xreverse
+
+            y={NECK_X_SERVO_POSITION}
+            ymin={0}
+            ymax={1}
+            ystep={0.01}
+
+            onChange={onChangeNeckXY}
+          />
+        </Col>
+        <Col xs={2}>
+          <Form.Control
+            className="w-100 h-100"
+
+            as={Slider}
+            axis="y"
+
+            y={get(servos, 'JAW_SERVO_NAME.position', JAW_SERVO_POSITION)}
+            ymin={0}
+            ymax={1}
+            ystep={0.01}
+
+            onChange={onChangeJaw}
+          />
+        </Col>
+        <Col xs={5} style={{ minHeight: '30vh' }}>
           <Form.Control
             className="w-100 h-100"
 
@@ -64,36 +120,7 @@ export const DashboardControls = () => {
             onChange={onChangeEyesXY}
           />
         </Col>
-
-        <Col xs={5}>
-          <Image fluid className="w-100" src="/cameras/right_eye" />
-        </Col>
       </Row>
-
-      {/*
-      <Row>
-        <Col className="py-5" xs={{ span: 6, offset: 3 }}>
-          <Slider
-            className="w-100"
-
-            axis="x"
-
-            x={get('servos, jawYServo')}
-            xmin={0}
-            xmax={1}
-            xstep={0.01}
-          />
-        </Col>
-      </Row>
-
-      <Row>
-        <Col xs={{ span: 6, offset: 3 }}>
-          <Button block variant="primary" size="lg">
-            Mouth
-          </Button>
-        </Col>
-      </Row>
-      */}
 
     </Fragment>
   )

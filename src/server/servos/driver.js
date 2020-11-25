@@ -1,3 +1,5 @@
+import onKillSignal from 'death'
+
 export default new Promise((resolve, reject) => {
   try {
     const i2c = require('i2c-bus')
@@ -14,6 +16,10 @@ export default new Promise((resolve, reject) => {
 
       console.log('Initialized pca9685 driver')
       return resolve(pca9685)
+    })
+
+    onKillSignal((signal, error) => {
+      pca9685.dispose()
     })
   } catch (e) {
     console.error(e)
