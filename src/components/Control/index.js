@@ -58,7 +58,7 @@ export const DashboardControls = () => {
           <Image fluid className="w-100" src="/cameras?action=stream_0" />
         </Col>
         <Col xs={6}>
-          <Image fluid className="w-100" src="/cameras?action=stream_0" />
+          <Image fluid className="w-100" src="/cameras?action=stream_1" />
         </Col>
       </Row>
 

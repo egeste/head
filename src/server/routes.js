@@ -5,7 +5,7 @@ export default app => {
   app.use(socketProxy)
 
   app.use(createProxyMiddleware('/cameras', {
-    target: process.env.LEFT_EYE_URL,
+    target: process.env.WEBCAM_SERVER_URL,
     changeOrigin: true,
     pathRewrite: {
       '^/cameras': '/'
