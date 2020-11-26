@@ -1,15 +1,6 @@
-import {
-  JAW_SERVO,
+import servos from './src/server/servos'
 
-  EYES_X_SERVO,
-  EYES_Y_SERVO,
-
-  NECK_X_SERVO
-} from './src/server/servos'
-
-JAW_SERVO.setPosition(0.5)
-
-EYES_X_SERVO.setPosition(0.5)
-EYES_Y_SERVO.setPosition(0.5)
-
-NECK_X_SERVO.setPosition(0.5)
+servo.JAW_SERVO.setPosition(0.5)
+servo.EYES_X_SERVO.setPosition(0.5)
+servo.EYES_Y_SERVO.setPosition(0.5)
+servo.NECK_X_SERVO.setPosition(0.5)
