@@ -1,7 +1,7 @@
 export const JAW_SERVO_NAME = 'JAW_SERVO'
 export const JAW_SERVO_CHANNEL = 4
 export const JAW_SERVO_POSITION = 0.5
-export const JAW_SERVO_PWM_RANGE = [600, 2400]
+export const JAW_SERVO_PWM_RANGE = [400, 1200]
 
 export const NECK_X_SERVO_NAME = 'NECK_X_SERVO'
 export const NECK_X_SERVO_CHANNEL = 0
