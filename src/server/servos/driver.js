@@ -20,6 +20,7 @@ export default new Promise((resolve, reject) => {
 
     onKillSignal((signal, error) => {
       pca9685.dispose()
+      process.exit()
     })
   } catch (e) {
     console.error(e)
