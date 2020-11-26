@@ -18,7 +18,7 @@ export default class Servo extends EventEmitter {
     channel,
     position=0.5,
     dutyCycle=0.25,
-    pulseRange=[600, 2400]
+    pwmRange=[600, 2400]
   }) {
     super()
 
@@ -28,7 +28,7 @@ export default class Servo extends EventEmitter {
 
     this.positionToPulseWidth = scaleLinear()
       .domain([ MIN_POSITION, MAX_POSITION ])
-      .range(pulseRange)
+      .range(pwmRange)
 
     driverPromise.then(driver => {
       driver.setDutyCycle(channel, dutyCycle, 0, () => {
